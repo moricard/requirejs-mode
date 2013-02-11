@@ -118,9 +118,9 @@
 (define-key require-mode-map
   (kbd "C-c rj") 'require-new-jasmine-module)
 
-(define-minor-mode require-mode
-  "Require mode" nil " requireJS" require-mode-map)
+(define-minor-mode requirejs-mode
+  "RequireJS mode" nil " requireJS" require-mode-map)
 
-(provide 'require-mode)
+(provide 'requirejs-mode)
 
-;;; require-mode.el ends here
+;;; requirejs-mode.el ends here

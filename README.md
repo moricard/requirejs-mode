@@ -13,11 +13,8 @@ Make sure you put the `requirejs-mode.el` in your load path.
 Then in your `init.el` file.
 
 ```
-(require 'require-mode)
-;; replace 'js2-mode-hook with 'js-mode if you don't use js2-mode
-(add-hook 'js2-mode-hook
-    (lambda ()
-        (require-mode)))
+(require 'requirejs-mode)
+(add-hook 'js2-mode-hook (lambda () (requirejs-mode)))
 ```
 
 ## Dependencies

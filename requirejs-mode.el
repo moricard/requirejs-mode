@@ -52,19 +52,6 @@
 );")
   (backward-char 9))
 
-(defun require-new-jasmine-module ()
-  "inititializes an new jasmine require module"
-  (interactive)
-  (insert "define (
-    ['jasmine'
-    ],
-    
-    function ( Jasmine ) {
-        
-    }
-);")
-  (backward-char 9))
-
 (defun require-import (s)
   "add import to require header"
   (interactive)
@@ -114,9 +101,6 @@
 
 (define-key require-mode-map
   (kbd "C-c r$") 'require-new-jquery-module)
-
-(define-key require-mode-map
-  (kbd "C-c rj") 'require-new-jasmine-module)
 
 (define-minor-mode requirejs-mode
   "RequireJS mode" nil " requireJS" require-mode-map)

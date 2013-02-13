@@ -67,22 +67,6 @@ define (
 );
 ```
 
-### require-new-jasmine-module
-
-Generates:
-
-```
-define (
-    ['jasmine'
-    ],
-    
-    function ( Jasmine ) {
-        
-    }
-);
-```
-
-
 ### require-import-file
 
 Importing file as a module is *Backbone aware* in the sense that it will try to keep the

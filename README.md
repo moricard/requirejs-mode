@@ -83,8 +83,7 @@ define (
 ```
 
 
-### require import file
-`M-x require-import`, or `C-c rf`
+### require-import-file
 
 Importing file as a module is *Backbone aware* in the sense that it will try to keep the
 subfolders of the imported files only if these are below `.../collections/`, `.../views/`,

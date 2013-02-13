@@ -1,7 +1,7 @@
 (require 'ido)
 
 (defun require-goto-headers ()
-  (search-backward-regexp "^define[\s]\(+[\s]*" nil t))
+  (search-backward-regexp "^define[\s]*(+[\s]*" nil t))
 
 (defun require-goto-function-declaration ()
   (search-forward-regexp "[\s]) {" nil t))
@@ -77,19 +77,19 @@
           (setq import (substring import index))
         (if (setq index (string-match "templates[/.]*[/]" import))
             (setq import (concat "text!" (substring import index)))
-          (setq index (string-match "[a-z]+[\.]js$" import))
+          (setq index (string-match "[a-z-0-9-]+[\.]js$" import))
           (setq import (substring import index))))))
 
   (save-excursion 
     (if (not (require-goto-headers))
-        (require-new-module))
+        (require-new-backbone-module))
     (require-goto-dependency-insert-point)
     (insert (concat
              ",'" (substring import 0 (string-match ".js$" import)) "'\n    "))
     (require-goto-headers-declaration)
     (insert (concat
              ", " (camelize (substring import 
-                                       (string-match "[a-z-]+[.]" import) 
+                                       (string-match "[0-9a-z-]+[.]" import) 
                                        (string-match "[.]" import))))))
   (message (concat "Adding " import " to dependencies.")))
 

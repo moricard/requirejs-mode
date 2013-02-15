@@ -18,23 +18,19 @@
 )
 
 (defun camelize (s)
-      "Convert under_score string S to CamelCase string."
+      "Convert dash-based string S to CamelCase string."
       (mapconcat 'identity (mapcar
                             '(lambda (word) (capitalize (downcase word)))
                             (split-string s "-")) ""))
 
-(defun require-new-jquery-module ()
-  "initializes a jquery module"
-  (interactive)
-  (insert "define (
-    ['jquery'
-    ],
-    
-    function ( $ ) {
-        
-    }
-);")
-  (backward-char 9))
+
+(defun un-camelcase-string (s &optional sep start)
+  (let ((case-fold-search nil))
+    (while (string-match "[A-Z]" s (or start 1))
+      (setq s (replace-match (concat (or sep "-") 
+                                     (downcase (match-string 0 s))) 
+                             t nil s)))
+    (downcase s)))
 
 ;; insert a new requireJS module with backbon
 (defun require-new-backbone-module ()
@@ -52,46 +48,64 @@
 );")
   (backward-char 9))
 
+
+(setq require-modules 
+      '(("jquery" . "$")
+        ("underscore" . "_")
+        ("backbone" . "Backbone")))
+
+
 (defun require-import (s)
   "add import to require header"
   (interactive)
+  (message (concat "Adding " s " to dependencies."))
+  (let ((import (substring s
+                           (or (string-match "collections[/.]*[/]" s)
+                               (string-match "models[/.]*[/]" s)
+                               (string-match "views[/.]*[/]" s)
+                               (string-match "templates[/.]*[/]" s)
+                               (string-match "[a-z0-9-]+[.]+[a-z]+$" s)
+                               0) 
+                           (string-match ".js$" s))))
 
- (if (setq index (string-match "collections[/.]*[/]" import))
-      (setq import (substring import index))
-    (if (setq index (string-match "models[/.]*[/]" import))
-        (setq import (substring import index))
-      (if (setq index (string-match "views[/.]*[/]" import))
-          (setq import (substring import index))
-        (if (setq index (string-match "templates[/.]*[/]" import))
-            (setq import (concat "text!" (substring import index)))
-          (setq index (string-match "[a-z-0-9-]+[\.]js$" import))
-          (setq import (substring import index))))))
+    (let ((key (un-camelcase-string import))
+          (value (camelize (substring import 0 (string-match "[.]" import)))))
+
+      (insert-module (or (assoc key require-modules)
+                         (assoc key (push (cons key value) require-modules)))))))
+
+;; (substring 0 (string-match "[.]" import))
+(defun insert-module (import)
+  "Insert import into module header"
+  (interactive)
 
   (save-excursion 
     (if (not (require-goto-headers))
         (require-new-backbone-module))
-    (require-goto-dependency-insert-point)
-    (insert (concat
-             ",'" (substring import 0 (string-match ".js$" import)) "'\n    "))
+    (require-goto-dependency-insert-point) 
+    (insert (concat ",'" (car import) "'\n    "))
     (require-goto-headers-declaration)
-    (insert (concat
-             ", " (camelize (substring import 
-                                       (string-match "[0-9a-z-]+[.]" import) 
-                                       (string-match "[.]" import))))))
-  (message (concat "Adding " import " to dependencies.")))
+    (insert (concat ", " (cdr import)))))
 
 (defun require-import-file ()
-  "add import to require header"
+  "add import to require header from ido-file-chooser"
   (interactive)
-  ; Get the file-name from interactive do.
-  (setq import (ido-read-file-name "Import RequireJS module: "))
-  (require-import import))
+  (require-import (ido-read-file-name "Import RequireJS module: ")))
+
+(defun require-import-name ()
+  "add import to require header from prompted name"
+  (interactive)
+  (insert-module (assoc (ido-completing-read "Add RequireJS module: " require-modules) require-modules)))
+
 
 (defvar require-mode-map (make-sparse-keymap)
   "require-mode keymap")
 
 (define-key require-mode-map
   (kbd "C-c rf") 'require-import-file)
+
+(define-key require-mode-map
+  (kbd "C-c ra") 'require-import-name)
 
 (define-key require-mode-map
   (kbd "C-c rn") 'require-new-backbone-module)

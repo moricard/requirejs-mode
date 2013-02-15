@@ -56,9 +56,9 @@ function definition.
 
 Current defaults:
 
-* `jquery` : `['jquery'], function( $ )`
-* `underscore` : `['underscore'], function( _ )`
-* `backbone` : `['backbone'], function( Backbone )`
+* `jquery` : `$`
+* `underscore` : `_`
+* `backbone` : `Backbone`
 
 ### `require-create`
 
@@ -70,7 +70,7 @@ Explicitly, generates:
 define (
     [],
     
-    function ( $ ) {
+    function ( ) {
         
     }
 );
@@ -83,19 +83,24 @@ as it will be created by default if it is not present.
 
 No dependencies, but it will use `ido` to auto-complete prompts if it is present.
 
+## Issues
+
+If you find bugs or you would like new features to be implemented, use the [issue
+tracker](https://github.com/ricardmo/requirejs-mode/issues), or better, make a
+pull request with the fixes.
 
 ## License
 Copyright (C) 2013 Marc-Olivier Ricard
 
 This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013 Marc-Olivier Ricard
 
 ;; Author: Marc-Olivier Ricard <marco.ricard@gmail.com>
-;; Version: 1.0
+;; Version: 1.1
 ;; Keywords: Javascript, AMD, RequireJs
 
 ;; This file is not part of GNU Emacs.
@@ -24,7 +24,7 @@
 ;;; Commentary:
 
 ;; This mode helps to manage dependencies in an AMD javascript module.
-;; See <https://github.com/ricardmo/requirejs-mode> for full documentation.
+;; See https://github.com/ricardmo/requirejs-mode for full documentation.
 
 ;;; Code:
 

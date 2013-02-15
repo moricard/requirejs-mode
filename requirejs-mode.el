@@ -1,3 +1,4 @@
+
 (defvar require-mode-map (make-sparse-keymap)
   "require-mode keymap")
 
@@ -5,13 +6,18 @@
   (kbd "C-c rf") 'require-import-file)
 
 (define-key require-mode-map
-  (kbd "C-c ra") 'require-import-name)
+  (kbd "C-c ra") 'require-import-add)
 
 (define-key require-mode-map
   (kbd "C-c rn") 'require-new-backbone-module)
 
 (define-minor-mode requirejs-mode
-  "RequireJS mode" nil " requireJS" require-mode-map)
+  "RequireJS mode
+
+This mode is intended to provide easier management of
+dependencies in an AMD style javascript module."
+
+  nil " requireJS" require-mode-map)
 
 (defun require-goto-headers ()
   (search-backward-regexp "^define[\s]*(+[\s]*" nil t))
@@ -79,7 +85,6 @@
         ("underscore" . "_")
         ("backbone" . "Backbone")))
 
-
 (defun require-import (s)
   "add import to require header"
   (interactive)
@@ -118,7 +123,7 @@
   (interactive)
   (require-import (get-file-name "Import RequireJS module: ")))
 
-(defun require-import-name ()
+(defun require-import-add ()
   "add import to require header from prompted name"
   (interactive)
   (insert-module (assoc (pick-from-list "Use RequireJS module: " require-modules) require-modules)))

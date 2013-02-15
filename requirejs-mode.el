@@ -1,4 +1,17 @@
-(require 'ido)
+(defvar require-mode-map (make-sparse-keymap)
+  "require-mode keymap")
+
+(define-key require-mode-map
+  (kbd "C-c rf") 'require-import-file)
+
+(define-key require-mode-map
+  (kbd "C-c ra") 'require-import-name)
+
+(define-key require-mode-map
+  (kbd "C-c rn") 'require-new-backbone-module)
+
+(define-minor-mode requirejs-mode
+  "RequireJS mode" nil " requireJS" require-mode-map)
 
 (defun require-goto-headers ()
   (search-backward-regexp "^define[\s]*(+[\s]*" nil t))
@@ -51,10 +64,10 @@
 
   (save-excursion 
     (if (not (require-goto-headers))
-        (require-new-backbone-module))
+        (require-create))
     (require-goto-dependency-insert-point)
-
     (let ((is-first (is-first-import)))
+
       (insert (concat (if is-first "'" ",'") (car import) "'\n    "))
       (require-goto-headers-declaration)
       (insert (concat (if is-first " " ", ") (cdr import))))))
@@ -80,43 +93,35 @@
                                0) 
                            (string-match ".js$" s))))
 
-    (let ((key (un-camelcase-string import))
+    (let ((key import)
           (value (camelize (substring import 0 (string-match "[.]" import)))))
 
       (insert-module (or (assoc key require-modules)
                          (assoc key (push (cons key value) require-modules)))))))
 
+;; Try to use ido if available but don't whine if not.
+(when (require 'ido nil 'noerror)
+  (setq ido-present t))
+
+(defun get-file-name (prompt)
+  (if ido-present 
+      (ido-read-file-name prompt)
+    (read-file-name prompt)))
+
+(defun pick-from-list (prompt alist)
+  (if ido-present
+      (ido-completing-read prompt alist)
+    (completing-read prompt alist)))
+
 (defun require-import-file ()
   "add import to require header from ido-file-chooser"
   (interactive)
-  (require-import (ido-read-file-name "Import RequireJS module: ")))
+  (require-import (get-file-name "Import RequireJS module: ")))
 
 (defun require-import-name ()
   "add import to require header from prompted name"
   (interactive)
-  (insert-module (assoc (ido-completing-read "Use RequireJS module: " require-modules) require-modules)))
-
-
-(defvar require-mode-map (make-sparse-keymap)
-  "require-mode keymap")
-
-(define-key require-mode-map
-  (kbd "C-c rf") 'require-import-file)
-
-(define-key require-mode-map
-  (kbd "C-c ra") 'require-import-name)
-
-(define-key require-mode-map
-  (kbd "C-c rn") 'require-new-backbone-module)
-
-(define-key require-mode-map
-  (kbd "C-d rb") 'require-new-backbone-module)
-
-(define-key require-mode-map
-  (kbd "C-c r$") 'require-new-jquery-module)
-
-(define-minor-mode requirejs-mode
-  "RequireJS mode" nil " requireJS" require-mode-map)
+  (insert-module (assoc (pick-from-list "Use RequireJS module: " require-modules) require-modules)))
 
 (provide 'requirejs-mode)
 

@@ -123,12 +123,16 @@ dependencies in an AMD style javascript module."
                                (string-match "models[/.]*[/]" s)
                                (string-match "views[/.]*[/]" s)
                                (string-match "templates[/.]*[/]" s)
+                               (string-match "nls[/.]*[/]" s)
                                (string-match "[a-z0-9-]+[.]+[a-z]+$" s)
                                0) 
                            (string-match ".js$" s))))
 
+    (if (string-match "templates" import)
+        (setq import (concat "text!" import)))
+
     (let ((key import)
-          (value (camelize (substring import 0 (string-match "[.]" import)))))
+          (value (camelize (substring import (string-match "[a-z0-9-]+[.]*[a-z]*$" import) (string-match "[.]" import)))))
 
       (insert-module (or (assoc key require-modules)
                          (assoc key (push (cons key value) require-modules)))))))

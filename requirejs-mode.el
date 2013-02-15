@@ -17,12 +17,14 @@
   (backward-char 2)
 )
 
+(defun is-first-import ()
+  (looking-back "[\[]" 2))
+
 (defun camelize (s)
       "Convert dash-based string S to CamelCase string."
       (mapconcat 'identity (mapcar
                             '(lambda (word) (capitalize (downcase word)))
                             (split-string s "-")) ""))
-
 
 (defun un-camelcase-string (s &optional sep start)
   (let ((case-fold-search nil))
@@ -32,23 +34,33 @@
                              t nil s)))
     (downcase s)))
 
-;; insert a new requireJS module with backbon
-(defun require-new-backbone-module ()
+(defun require-create ()
   "initializes an empty requireJS mnodule"
   (interactive)
   (insert "define (
-    ['jquery'
-    ,'underscore'
-    ,'backbone'
-    ],
-    
-    function ( $, _, Backbone ) {
+    [],    
+    function ( ) {
         
     }
 );")
   (backward-char 9))
 
+(defun insert-module (import)
+  "Insert import into module header"
+  (interactive)
 
+  (save-excursion 
+    (if (not (require-goto-headers))
+        (require-new-backbone-module))
+    (require-goto-dependency-insert-point)
+
+    (let ((is-first (is-first-import)))
+      (insert (concat (if is-first "'" ",'") (car import) "'\n    "))
+      (require-goto-headers-declaration)
+      (insert (concat (if is-first " " ", ") (cdr import))))))
+
+
+;; Very basic default list of modules
 (setq require-modules 
       '(("jquery" . "$")
         ("underscore" . "_")
@@ -74,19 +86,6 @@
       (insert-module (or (assoc key require-modules)
                          (assoc key (push (cons key value) require-modules)))))))
 
-;; (substring 0 (string-match "[.]" import))
-(defun insert-module (import)
-  "Insert import into module header"
-  (interactive)
-
-  (save-excursion 
-    (if (not (require-goto-headers))
-        (require-new-backbone-module))
-    (require-goto-dependency-insert-point) 
-    (insert (concat ",'" (car import) "'\n    "))
-    (require-goto-headers-declaration)
-    (insert (concat ", " (cdr import)))))
-
 (defun require-import-file ()
   "add import to require header from ido-file-chooser"
   (interactive)
@@ -95,7 +94,7 @@
 (defun require-import-name ()
   "add import to require header from prompted name"
   (interactive)
-  (insert-module (assoc (ido-completing-read "Add RequireJS module: " require-modules) require-modules)))
+  (insert-module (assoc (ido-completing-read "Use RequireJS module: " require-modules) require-modules)))
 
 
 (defvar require-mode-map (make-sparse-keymap)

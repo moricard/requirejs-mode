@@ -9,7 +9,7 @@
   (kbd "C-c ra") 'require-import-add)
 
 (define-key require-mode-map
-  (kbd "C-c rn") 'require-new-backbone-module)
+  (kbd "C-c rc") 'require-create)
 
 (define-minor-mode requirejs-mode
   "RequireJS mode
@@ -126,7 +126,7 @@ dependencies in an AMD style javascript module."
 (defun require-import-add ()
   "add import to require header from prompted name"
   (interactive)
-  (insert-module (assoc (pick-from-list "Use RequireJS module: " require-modules) require-modules)))
+  (insert-module (assoc (pick-from-list "Add RequireJS module: " require-modules) require-modules)))
 
 (provide 'requirejs-mode)
 

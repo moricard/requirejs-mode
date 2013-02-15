@@ -8,8 +8,13 @@ productive.
 
 ## Installation
 
-Make sure you put the `requirejs-mode.el` in your load path.
+It is available on the [marmalade-repo](http://marmalade-repo.org), so if you use ELPA:
 
+```
+package-install requirejs-mode
+```
+
+Otherwise, make sure you put the `requirejs-mode.el` in your load path.
 
 Then in your `init.el` file.
 

@@ -8,19 +8,8 @@ Improved javascript [AMD](http://requirejs.org) dependencies management for the 
 
 ## Installation
 
-It is available on the [marmalade-repo](http://marmalade-repo.org), so in order to use ELPA:
-
-Make sure you have setup your `packages` to use marmalade.
-
-In your `init.el` file.
-```
-(require 'package)
-(add-to-list 'package-archives 
-    '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
-```
-
-Then, it is as simple as:
+Packages are available in the [marmalade](http://marmalade-repo.org) and
+[MELPA](http://melpa.milkbox.net/) repositories, so if you use ELPA:
 
 ```
 M-x package-install requirejs-mode

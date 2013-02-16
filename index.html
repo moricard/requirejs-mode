@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>Requirejs-mode</h1>
-        <p>requireJS minor mode for emacs</p>
+        <p>Imporoved javascript AMD dependencies management for the one true editor.</p>
 
         <p class="view"><a href="https://github.com/ricardmo/requirejs-mode">View the Project on GitHub <small>ricardmo/requirejs-mode</small></a></p>
 
@@ -30,16 +30,18 @@
       <section>
         <h1>requirejs-mode</h1>
 
-<p>requireJS is a Backbone aware minor mode for emacs</p>
+<p>Improved javascript <a href="http://requirejs.org">AMD</a> dependencies management for the one true editor.</p>
 
-<p>The goal is to make writing modules for <a href="http://requirejs.org">requireJS</a> easier and more
-productive.</p>
+<p><a href="http://www.youtube.com/watch?v=V6TZNPxpoeo">See it in action</a></p>
+
+
 
 <h2>Installation</h2>
 
-<p>It is available on the <a href="http://marmalade-repo.org">marmalade-repo</a>, so if you use ELPA:</p>
+<p>Packages are available in the <a href="http://marmalade-repo.org">marmalade</a> and
+<a href="http://melpa.milkbox.net/">MELPA</a> repositories, so if you use ELPA:</p>
 
-<pre><code>package-install requirejs-mode
+<pre><code>M-x package-install requirejs-mode
 </code></pre>
 
 <p>Otherwise, make sure you put the <code>requirejs-mode.el</code> in your load path.</p>
@@ -56,6 +58,91 @@ js2-mode.</p>
 <pre><code>(add-hook 'js2-mode-hook (lambda () (requirejs-mode)))
 </code></pre>
 
+<h2>Features</h2>
+
+<h3>Importing a file as a dependency</h3>
+
+<p>When working in a project, it can be error prone to try and remember the exact name and path
+of a javascript module you want to import in some other module.</p>
+
+<p><code>M-x requirejs-import-file</code> fixes this problem by giving you a mini-buffer prompt from which 
+you can browse your file-system for the said module. It will then insert it in the dependencies
+list of your current module definition and insert a CamelCased version of it's name in the
+function definition.</p>
+
+<p>It goes the extra mile by doing some extra processing to the file-name you imported. </p>
+
+<ul>
+<li>Trims the <code>.js</code> extension and transforms <code>dash-based-names</code> to <code>CamelCased</code> in function def.</li>
+<li>Prepends <code>text!</code> in the dependency to make use of the text plugin of requirejs if the file
+you import is a template.</li>
+<li>Adds <code>View</code> to the variable name if the file you import is within a <code>views</code> folder.</li>
+<li>Adds <code>Template</code> to the variable name if the file you import is within a <code>templates</code> folder.</li>
+</ul><p>Here are a couple examples. Note: I use <a href="http://backbonejs.org">Backbone.js</a> lately so most 
+of these are Backbone related in some way, but not necessarely exclusive to it.</p>
+
+<ul>
+<li>
+<p>Importing <code>.../javascripts/models/item.js</code></p>
+
+<p>Will result in adding <code>'models/item'</code> in the dependencies list and <code>Item</code> in the function
+definition.</p>
+</li>
+<li>
+<p>Importing <code>.../javascripts/views/item.js</code></p>
+
+<p>Will result in adding <code>'views/item'</code> in the dependencies list and <code>ItemView</code> in the function
+definition.</p>
+</li>
+<li>
+<p>Importing <code>.../javascripts/collections/items/sold-items.js</code></p>
+
+<p>Will result in adding <code>'collections/items/sold-items'</code> in the dependencies list and <code>SoldItems</code>
+in the function definition.</p>
+</li>
+<li>
+<p>Importing <code>.../../templates/item.html</code></p>
+
+<p>Will result in adding <code>'text!templates/item.html'</code> in the dependencies list and <code>ItemTemplate</code>
+in the function definition.</p>
+</li>
+<li>
+<p>Importing any file <em>not</em> within one of the <code>{models, views, collections, templates}</code> sub-folders.</p>
+
+<p>Will result in adding <code>'file-name'</code> in the dependencies list and <code>FileName</code> in the function
+definition. Thus assuming you have correctly setup your <code>require.config({ paths: {...} });</code>.</p>
+</li>
+</ul><h3>Adding a known module as a dependency</h3>
+
+<p>When you import a file as a dependency, it will save its <code>('dependency-name', DependencyDeclaration)</code>
+pair in a temporary associative list for the life-time of your Emacs session. You can then
+access these quickly by using <code>M-x requirejs-import-add</code> and pick the one you need. It will then
+be inserted in your current module definition.</p>
+
+<p>Some defaults are already loaded in this temporary associative list for quick access:</p>
+
+<pre><code>'jquery'     -&gt; $
+'underscore' -&gt; _
+'backbone'   -&gt; Backbone
+</code></pre>
+
+<h3>Creating an empty module</h3>
+
+<p>This functionnality is only there to circumvent the need to depend on a snippet system to
+create the boilerplate structure of the module. Notice that if the previous features don't
+find a proper AMD structure within the current file, it will use this feature to create one
+and then insert the desired imports.</p>
+
+<p>Explicity, it generates:</p>
+
+<pre><code>define (
+    [],    
+    function ( ) {
+
+    }
+);
+</code></pre>
+
 <h2>Keybindings</h2>
 
 <ul>
@@ -65,60 +152,7 @@ js2-mode.</p>
 <code>C-c rc</code> : require-create</li>
 <li>
 <code>C-c ra</code> : require-import-add</li>
-</ul><h2>Functions</h2>
-
-<h3><code>require-import-file</code></h3>
-
-<p>Importing file as a module is <em>Backbone aware</em> in the sense that it will try to keep the
-subfolders of the imported files only if these are below <code>.../collections/</code>, <code>.../views/</code>,
-<code>.../models/</code>, <code>.../templates/</code>.</p>
-
-<p>For example, importing a file with the relative path <code>../collections/books.js</code> from a module
-will put <code>'collections/books'</code> in the dependencies list and <code>'Books'</code> in the function declaration.</p>
-
-<p>It will also prepend <code>text!</code> in the dependencies list item if the file loaded is a template.</p>
-
-<h3><code>require-import-add</code></h3>
-
-<p>This mode keeps track of all files imported as a dependency within an Emacs session. So
-a common dependency, such as jquery, underscore, backbone, or any you have already 
-imported in your session will be available with this function.</p>
-
-<p>Dependencies are stored as an associative list, so choosing an item from the list will
-put it's dependency name in the list and it's function variable name in the module's
-function definition.</p>
-
-<p>Current defaults:</p>
-
-<ul>
-<li>
-<code>jquery</code> : <code>$</code>
-</li>
-<li>
-<code>underscore</code> : <code>_</code>
-</li>
-<li>
-<code>backbone</code> : <code>Backbone</code>
-</li>
-</ul><h3><code>require-create</code></h3>
-
-<p>Creates an empty AMD module.</p>
-
-<p>Explicitly, generates:</p>
-
-<pre><code>define (
-    [],
-
-    function ( ) {
-
-    }
-);
-</code></pre>
-
-<p>Note that it is not necessary to create an empty module before importing dependencies
-as it will be created by default if it is not present.</p>
-
-<h2>Dependencies</h2>
+</ul><h2>Dependencies</h2>
 
 <p>No dependencies, but it will use <code>ido</code> to auto-complete prompts if it is present.</p>
 

@@ -1,10 +1,8 @@
 requirejs-mode
 ==============
 
-requireJS is a Backbone aware minor mode for emacs
+Improved javascript [AMD](http://requirejs.org) dependencies management for the one true editor.
 
-The goal is to make writing modules for [requireJS](http://requirejs.org) easier and more
-productive.
 
 ## Installation
 
@@ -51,12 +49,19 @@ of a javascript module you want to import in some other module.
 
 `M-x requirejs-import-file` fixes this problem by giving you a mini-buffer prompt from which 
 you can browse your file-system for the said module. It will then insert it in the dependencies
-list of your current module definition and insert a CamelCased version of the name of it's
-name in the function definition.
+list of your current module definition and insert a CamelCased version of it's name in the
+function definition.
 
-It goes the extra mile by doing some processing to the file-name you imported. Here are a 
-couple examples. Note: I use [Backbone.js](http://backbonejs.org) lately so most of these
-are Backbone related in some way, but not necessarely exclusive to it.
+It goes the extra mile by doing some extra processing to the file-name you imported. 
+
+* Trims the `.js` extension and transforms `dash-based-names` to `CamelCased` in function def.
+* Prepends `text!` in the dependency to make use of the text plugin of requirejs if the file
+  you import is a template.
+* Adds `View` to the variable name if the file you import is within a `views` folder.
+* Adds `Template` to the variable name if the file you import is within a `templates` folder.
+
+Here are a couple examples. Note: I use [Backbone.js](http://backbonejs.org) lately so most 
+of these are Backbone related in some way, but not necessarely exclusive to it.
 
 * Importing `.../javascripts/models/item.js`
 

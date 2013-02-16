@@ -8,7 +8,8 @@ productive.
 
 ## Installation
 
-It is available on the [marmalade-repo](http://marmalade-repo.org), so if you use ELPA:
+Packages are available in the [marmalade](http://marmalade-repo.org) and
+[MELPA](http://melpa.milkbox.net/) repositories, so if you use ELPA:
 
 ```
 package-install requirejs-mode

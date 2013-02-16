@@ -3,6 +3,8 @@ requirejs-mode
 
 Improved javascript [AMD](http://requirejs.org) dependencies management for the one true editor.
 
+[See it in action](http://www.youtube.com/watch?v=V6TZNPxpoeo)
+
 
 ## Installation
 

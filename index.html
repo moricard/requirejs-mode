@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Requirejs-mode by ricardmo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Requirejs-mode</h1>
+        <p>requireJS minor mode for emacs</p>
+
+        <p class="view"><a href="https://github.com/ricardmo/requirejs-mode">View the Project on GitHub <small>ricardmo/requirejs-mode</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/ricardmo/requirejs-mode/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ricardmo/requirejs-mode/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ricardmo/requirejs-mode">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>requirejs-mode</h1>
+
+<p>requireJS is a Backbone aware minor mode for emacs</p>
+
+<p>The goal is to make writing modules for <a href="http://requirejs.org">requireJS</a> easier and more
+productive.</p>
+
+<h2>Installation</h2>
+
+<p>It is available on the <a href="http://marmalade-repo.org">marmalade-repo</a>, so if you use ELPA:</p>
+
+<pre><code>package-install requirejs-mode
+</code></pre>
+
+<p>Otherwise, make sure you put the <code>requirejs-mode.el</code> in your load path.</p>
+
+<p>Then in your <code>init.el</code> file.</p>
+
+<pre><code>(require 'requirejs-mode)
+</code></pre>
+
+<p>If you would like to automatically load requireJs mode when editing javascript, you can put the
+following in your <code>init.el</code>. Replace <code>js2-mode-hook</code> by <code>javascript-mode-hook</code> if you don't use
+js2-mode.</p>
+
+<pre><code>(add-hook 'js2-mode-hook (lambda () (requirejs-mode)))
+</code></pre>
+
+<h2>Keybindings</h2>
+
+<ul>
+<li>
+<code>C-c rf</code> : require-import-file</li>
+<li>
+<code>C-c rc</code> : require-create</li>
+<li>
+<code>C-c ra</code> : require-import-add</li>
+</ul><h2>Functions</h2>
+
+<h3><code>require-import-file</code></h3>
+
+<p>Importing file as a module is <em>Backbone aware</em> in the sense that it will try to keep the
+subfolders of the imported files only if these are below <code>.../collections/</code>, <code>.../views/</code>,
+<code>.../models/</code>, <code>.../templates/</code>.</p>
+
+<p>For example, importing a file with the relative path <code>../collections/books.js</code> from a module
+will put <code>'collections/books'</code> in the dependencies list and <code>'Books'</code> in the function declaration.</p>
+
+<p>It will also prepend <code>text!</code> in the dependencies list item if the file loaded is a template.</p>
+
+<h3><code>require-import-add</code></h3>
+
+<p>This mode keeps track of all files imported as a dependency within an Emacs session. So
+a common dependency, such as jquery, underscore, backbone, or any you have already 
+imported in your session will be available with this function.</p>
+
+<p>Dependencies are stored as an associative list, so choosing an item from the list will
+put it's dependency name in the list and it's function variable name in the module's
+function definition.</p>
+
+<p>Current defaults:</p>
+
+<ul>
+<li>
+<code>jquery</code> : <code>$</code>
+</li>
+<li>
+<code>underscore</code> : <code>_</code>
+</li>
+<li>
+<code>backbone</code> : <code>Backbone</code>
+</li>
+</ul><h3><code>require-create</code></h3>
+
+<p>Creates an empty AMD module.</p>
+
+<p>Explicitly, generates:</p>
+
+<pre><code>define (
+    [],
+
+    function ( ) {
+
+    }
+);
+</code></pre>
+
+<p>Note that it is not necessary to create an empty module before importing dependencies
+as it will be created by default if it is not present.</p>
+
+<h2>Dependencies</h2>
+
+<p>No dependencies, but it will use <code>ido</code> to auto-complete prompts if it is present.</p>
+
+<h2>Issues</h2>
+
+<p>If you find bugs or you would like new features to be implemented, use the <a href="https://github.com/ricardmo/requirejs-mode/issues">issue
+tracker</a>, or better, make a
+pull request with the fixes.</p>
+
+<h2>License</h2>
+
+<p>Copyright (C) 2013 Marc-Olivier Ricard</p>
+
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ricardmo">ricardmo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37375728-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
